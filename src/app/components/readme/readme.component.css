@@ -1,0 +1,22 @@
+.showCodigo {
+    box-sizing: border-box;
+    margin: 5px;
+    padding: 10px;
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.agregar {
+    background-color: #d9eeda;
+    border: 1px solid #81c784;
+}
+
+.borrar {
+    background-color: #d9eeda;
+    border: 1px solid #81c784;
+}
+
+.actualizar {
+    background-color: #fff9c4;
+    border: 1px solid #ffeb3b;
+}

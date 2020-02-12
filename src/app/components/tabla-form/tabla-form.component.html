@@ -1,0 +1,100 @@
+<section class="pt-5">
+    <div class="container mt-5">
+        <div class="row mb-4 mt-5">
+            <div class="col-xs-12 col-sm-8 col-md-10">
+                <h2>Con formulario reactivo</h2>
+            </div>
+            <div class=" col-xs-12 col-sm-4 col-md-2">
+                <button type="button" class="btn btn-primary float-right ml-3 btn-block" data-toggle="modal" data-target="#modalPersona">+ Agregar</button>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                            <th scope="col">Dni</th>
+                            <th scope="col">Acciones</th>
+                            <th scope="col">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let persona of personas">
+                            <th scope="row">{{persona.id}}</th>
+                            <td>{{persona.nombre}}</td>
+                            <td>{{persona.apellido}}</td>
+                            <td>{{persona.dni}}</td>
+                            <td>
+                                <button type="button" class="btn btn-success" (click)="onPreUpdate(persona)" data-toggle="modal" data-target="#modalPersona">Actualizar</button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" (click)="delete(persona)">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- VENTANA MODAL FORMULARIO -->
+
+<div class="modal" id="modalPersona" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ personaActual.id == 0 ? 'Nuevo libro' : 'Actualizar libro'}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onClose()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+            </div>
+            <div class="modal-body">
+                <form name="formPersona" [formGroup]="formPersona" (ngSubmit)="onSavePersona(formPersona)">
+                    <input type="hidden" name="id" id="id" formControlName="id">
+                    <div class="form-row mt-0">
+                        <div class="form-group col-md-6">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="form-control" name="nombre" id="nombre" formControlName="nombre">
+                            <div *ngIf="formPersona.controls['nombre'].errors?.required" class="camposRequeridos">
+                                *campo requerido
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="apellido">Apellido:</label>
+                            <input type="text" class="form-control" id="apellido" name="apellido" formControlName="apellido">
+                            <div *ngIf="formPersona.controls['apellido'].errors?.required" class="camposRequeridos">
+                                *campo requerido
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dni">DNI:</label>
+                        <input type="number" maxlength="8" class="form-control" id="dni" name="dni" formControlName="dni">
+                        <div *ngIf="formPersona.get('dni').hasError('required')" class="camposRequeridos">
+                            *campo requerido
+                        </div>
+                        <div *ngIf="formPersona.get('dni').hasError('pattern')" class="camposRequeridos">
+                            *máximo 8 numeros
+                        </div>
+                    </div>
+
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="isError">
+                        <p class="alertFont">¡Debes completar todos los campos!</p>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="onCloseAlert()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" #btnClose (click)="onClose()">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="formPersona.invalid">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

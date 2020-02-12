@@ -1,0 +1,91 @@
+<div class="jumbotron jumbotron-fluid pt-5">
+    <div class="container pt-5">
+        <h1>Final Programación 3</h1>
+        <h4 class="display-6">11 de Febrero de 2020</h4>
+        <p class="lead">Alumna: Florencia Salcedo</p>
+    </div>
+</div>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mt-5">
+                <h2>Consigna</h2>
+                <hr>
+                <p>Crear un abm en base a la API PersonaProfe, donde los datos de la tabla sean actualizados sin hacer una nueva llamada http (sin usar location.reload() o router.navigate())</p>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2>Actualización sin reload</h2>
+                <hr>
+                <p>Para las actualizaciones en la tabla simplemente trabaje con la edición del arreglo en tiempo real. <strong>Al agregar</strong> se realiza un push() de la persona agregada, quedando esta al final de la tabla. <strong>Al actualizar</strong>,
+                    primero se filtran todas las personas cuyos id no conincidan con la persona agregas, se asigna este arreglo filtrado al arreglo personas y por último se realiza un unshift() que guarda a la persona en la primera posición del arreglo.
+                    Por último,
+                    <strong>al eliminar</strong>, se busca el indice de la persona a eliminar y luego se realiza un splice() del arreglo, quitando de este el elemento con el index encontrado.</p>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="showCodigo agregar">
+                            <h6>Al agregar</h6>
+                            <hr>
+                            <p>this.personas.push(res);</p>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="showCodigo actualizar">
+                            <h6>Al actualizar</h6>
+                            <hr>
+                            <p>const changes = this.tabla.personas.filter(item => item.id !== persona.id);</p>
+                            <p>this.tabla.personas = changes;</p>
+                            <p>this.tabla.personas.unshift(persona);</p>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="showCodigo borrar">
+                            <h6>Al borrar</h6>
+                            <hr>
+                            <p>const indexOfPersona = this.personas.indexOf(persona);</p>
+                            <p>console.log(indexOfPersona);</p>
+                            <p>this.personas.splice(indexOfPersona, 1);</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>NgModel</h2>
+                        <hr>
+                        <button type="button" class="btn btn-primary btn-block mb-2 mt-2" routerLink="/ngModel">FORMULARIO CON NG MODEL</button>
+                        <p>En este caso, pude trabajar con la tabla y el formulario en componentes separados, ya que los datos en la vista se mantienen sincronizados con los datos del controlador todo el tiempo gracias a la directiva NgModel</p>
+                        <p>
+                            Los puntos en contra de este método es que las validaciones no se realizan en tiempo real y es más difícil de testear
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-12">
+
+                        <h2>Reactive Form </h2>
+                        <hr>
+                        <button type="button" class="btn btn-primary btn-block mb-2 mt-2" routerLink="/reactiveForm">FORMULARIO REACTIVO</button>
+                        <p>Para poder actualizar la tabla sin reload o navigate, trabaje con la tabla y la ventana modal en el mismo componente, ya que para trabajar con un modal en otro component no puedo pasarle el dato a actualizar desde home. Esto se
+                            debe a que al inciar el component Form al mismo tiempo que el componente Tabla, el dato recibido para la construcción del formulario siempre va a ser el dato inicial del elemento personaActual (que se encuentra en Tabla y llega
+                            como @Input() al componente Form), no actualizandose éste cuando cambia en el método onPreUpdate() del componente home. (Puede encontrar el la prueba realizada del Form Reactivo con dos componentes en /components/prueba o siguiendo
+                            <a routerLink="/reactiveTwoComponents"> este link  </a>)
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+
+            </div>
+        </div>
+    </div>
+</section>
