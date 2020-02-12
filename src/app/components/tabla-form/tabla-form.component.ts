@@ -17,6 +17,8 @@ export class TablaFormComponent implements OnInit {
 
   public formPersona: FormGroup;
 
+  paginaActual = 1;
+
   public isError = false;
 
   public personas: Persona[];
@@ -122,6 +124,7 @@ export class TablaFormComponent implements OnInit {
         // Se asigna el arreglo filtrado al arreglo de personas
         this.personas = changes;
         // Se inserta el dato actualizado al principio del arreglo
+        this.paginaActual = 1;
         this.personas.unshift(persona);
       },
       err => {

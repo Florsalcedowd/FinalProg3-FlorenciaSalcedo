@@ -46,8 +46,7 @@ export class FormComponent implements OnInit {
   add(persona: Persona) {
     this.personaService.post(persona).subscribe(
       res => {
-      alert('Nueva persona agregada!');
-      this.personas.push(res);
+        this.personas.push(res);
       },
       err => {
         alert('Ocurrió un error al agregar persona');
@@ -61,6 +60,7 @@ export class FormComponent implements OnInit {
         alert('Persona actualizada con éxito!');
         const changes = this.tabla.personas.filter(item => item.id !== persona.id);
         this.tabla.personas = changes;
+        this.tabla.paginaActual = 1;
         this.tabla.personas.unshift(persona);
       },
       err => {

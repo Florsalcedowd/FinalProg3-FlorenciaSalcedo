@@ -20,6 +20,8 @@ export class TablaComponent implements OnInit {
     dni: null
   };
 
+  public paginaActual = 1;
+
   ngOnInit() {
     this.getAllPersonas();
   }
@@ -40,10 +42,6 @@ export class TablaComponent implements OnInit {
         this.personas.splice(indexOfPersona, 1);
       });
     }
-  }
-
-  updatePersona(persona: Persona) {
-    console.log(persona);
   }
 
   onPreUpdate(persona: Persona): void {
