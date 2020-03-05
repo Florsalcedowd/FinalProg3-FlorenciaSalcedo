@@ -12,7 +12,7 @@ Crear un abm en base a la API PersonaProfe, donde los datos de la tabla sean act
 Para las actualizaciones en la tabla simplemente trabaje con la edición del arreglo en tiempo real. **Al agregar** se realiza un push() de la persona agregada, quedando esta al final de la tabla. **Al actualizar**,primero se filtran todas las personas cuyos id no conincidan con la persona agregas, se asigna este arreglo filtrado al arreglo personas y por último se realiza un unshift() que guarda a la persona en la primera posición del arreglo.Por último, **al eliminar**, se busca el indice de la persona a eliminar y luego se realiza un splice() del arreglo, quitando de este el elemento con el index encontrado.
 
 _Para agregar_
-```
+``` javascript
 add(persona: Persona) {
     this.personaService.post(persona).subscribe(
       res => {
@@ -27,7 +27,7 @@ add(persona: Persona) {
 ```
 
 _Para actualizar_
-```
+``` javascript
 // Método que actualiza un registro existente
   update(persona: Persona): void {
     this.personaService.put(persona.id, persona).subscribe(
@@ -45,7 +45,7 @@ _Para actualizar_
   }
 ```
 _Para eliminar_
-```
+``` javascript
 delete(persona: Persona): void {
     const opcion = confirm('¿Está seguro que desea eliminar este registro?');
     if (opcion === true) {
@@ -67,6 +67,24 @@ Una vez que se realiza un location.Reload() o se refresca la página, el método
 
 ### Uso de reactive forms
 Para poder actualizar la tabla sin reload o navigate, trabaje con la tabla y la ventana modal en el mismo componente, ya que para trabajar con un modal en otro component no logré pasarle el dato a actualizar desde home. Esto se debe a que al inciar el component Form al mismo tiempo que el componente Tabla, el dato recibido para la construcción del formulario siempre va a ser el dato inicial del elemento personaActual (que se encuentra en Tabla y llega como @Input() al componente Form), no actualizandose éste cuando cambia en el método onPreUpdate() del componente home. (Puede encontrar la prueba realizada del Form Reactivo con dos componentes en /components/prueba)
+
+## ACTUALIZACIÓN
+Ahora podrá encontrar el uso de formulario reactivos en dos componentes, realizando un patchValue dentro de la directiva @Input en el componente form logré que el formulario tomara los datos del registro a actualizar.
+``` javascript
+@Input() set personaActual(valor) {
+    this.buildForm();
+    if (valor) {
+      this.personaOriginal = valor;
+      this.edit = true;
+      this.formPersona.patchValue({
+        id: valor.id,
+        nombre: valor.nombre,
+        apellido: valor.apellido,
+        dni: valor.dni
+      });
+    }
+  }
+```
 
 ### Inclusión de form con NgForm
 En la aplicación también podrá encontrar el mismo ejercicio pero realizado con la directiva NgModel (Template-driven form). En este caso si me fue posible realizar Formulario y Tabla en componentes separados, ya que la directiva NgModel mantiene los datos de los componentes sincronizados con la vista y la construcción del formulario no se realiza desde el componente. Los puntos en contra de esta metodología son que la validación no se hace en tiempo real y al estar casi toda su lógica en la vista se hace dificil de testear.
