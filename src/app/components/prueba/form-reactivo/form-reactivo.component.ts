@@ -1,7 +1,7 @@
 import { TablaReactivaComponent } from '../tabla-reactiva/tabla-reactiva.component';
-import { Component, OnInit, Host, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, Host, ElementRef, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { PersonaService } from 'src/app/services/persona.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Persona } from 'src/app/models/persona';
 
 @Component({
@@ -11,42 +11,42 @@ import { Persona } from 'src/app/models/persona';
 })
 export class FormReactivoComponent implements OnInit {
 
-  constructor(private personaService: PersonaService, private formBuilder: FormBuilder) {
+  @Input() set personaActual(valor) {
+    this.buildForm();
+    if (valor) {
+      this.personaOriginal = valor;
+      this.edit = true;
+      this.formPersona.patchValue({
+        id: valor.id,
+        nombre: valor.nombre,
+        apellido: valor.apellido,
+        dni: valor.dni
+      });
+    }
+  }
+
+  public formPersona: FormGroup;
+  public personaOriginal: any;
+  public edit = false;
+
+  constructor(private personaService: PersonaService, private formBuilder: FormBuilder, @Host() private tabla: TablaReactivaComponent) {
 
   }
 
   @ViewChild('btnClose',  { static: true }) btnClose: ElementRef;
 
-  @Input() personas: Persona[];
-  // @Input() personaActual: Persona;
-  @Input() formTabla: FormGroup;
-
-  public personaActualModal: Persona = {
-    id: 0,
-    nombre: '',
-    apellido: '',
-    dni: null
-  };
-
-  public formPersona: FormGroup;
-
   isError = false;
 
   ngOnInit() {
-    // this.buildForm(this.personaActualModal);
-    this.formPersona = this.formTabla;
+    this.buildForm();
   }
 
-  updatePersona(persona: Persona){
-    this.personaActualModal = persona;
-  }
-
-  buildForm(persona: Persona) {
+  buildForm() {
     this.formPersona = this.formBuilder.group({
-      id: [persona.id],
-      nombre: [persona.nombre, Validators.required],
-      apellido: [persona.apellido, Validators.required],
-      dni: [persona.dni, Validators.required]
+      id: new FormControl(0),
+      nombre: new FormControl('', Validators.required),
+      apellido: new FormControl('', Validators.required),
+      dni: new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,8}')])
     });
   }
 
@@ -72,29 +72,30 @@ export class FormReactivoComponent implements OnInit {
   add(persona: Persona) {
     this.personaService.post(persona).subscribe(
       res => {
-        // Agrega el dato nuevo al final de la tabla
-        this.personas.push(persona);
+        this.tabla.personas.push(res);
       },
       err => {
-        alert('Ha ocurrido un error al guardar, intenta nuevamente');
+        alert('Ocurrió un error al agregar persona');
       }
-    );
+      );
   }
 
-  update(persona: Persona): void {
+  update(persona: Persona) {
     this.personaService.put(persona.id, persona).subscribe(
-      res => {
-        const changes = this.personas.filter(item => item.id !== persona.id);
-        this.personas = changes;
-        // Agrega el dato actualizado al principio de la tabla
-        this.personas.unshift(persona);
+      data => {
+        alert('Persona actualizada con éxito!');
+        const changes = this.tabla.personas.filter(item => item.id !== persona.id);
+        this.tabla.personas = changes;
+        this.tabla.personas.unshift(persona);
       },
       err => {
-        alert('Ha ocurrido un error al guardar, intenta nuevamente');
+        alert('Ocurrió un error al actualizar persona');
       });
   }
 
   onClose(): void {
+    this.personaOriginal = null;
+    this.edit = false;
     this.formPersona.reset();
   }
 

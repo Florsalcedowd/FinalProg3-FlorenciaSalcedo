@@ -12,7 +12,7 @@ import { Validators, FormBuilder } from '@angular/forms';
 })
 export class TablaReactivaComponent implements OnInit {
 
-  constructor(private personaService: PersonaService,  @Host() private form: FormReactivoComponent, private router: Router,
+  constructor(private personaService: PersonaService, private router: Router,
               private formBuilder: FormBuilder) { }
 
   public personas: Persona[];
@@ -53,15 +53,6 @@ export class TablaReactivaComponent implements OnInit {
 
   onPreUpdate(persona: Persona): void {
     this.personaActual = Object.assign({}, persona);
-    this.form.updatePersona(persona);
-    /* this.form.formPersona = this.formBuilder.group({
-      id: [persona.id],
-      nombre: [persona.nombre, Validators.required],
-      apellido: [persona.apellido, Validators.required],
-      dni: [persona.dni, Validators.required]
-    });
-    console.log(this.form.formPersona.get('nombre').value); */
-    this.form.ngOnInit();
   }
 
 }
